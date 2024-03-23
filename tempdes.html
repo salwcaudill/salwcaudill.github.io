@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asset Manager</title>
+<style>
+body {
+  background-color: rgb(0, 0, 0);
+}
+.wrapper {
+  display: flex;  
+  flex-flow: row wrap;
+  font-weight: bold;
+  text-align: center; 
+}
+
+.wrapper > * {
+  padding: 10px;
+  flex: 1 100%;
+}
+
+.header {
+  background: rgb(5, 110, 19);
+}
+
+.footer {
+  background: rgb(5, 110, 19);
+}
+
+.main {
+  text-align: left;
+  background: rgb(5, 110, 19);
+}
+
+.aside-1 {
+  background: rgb(5, 110, 19);
+}
+
+.aside-2 {
+  background: rgb(5, 110, 19);
+}
+
+@media all and (min-width: 600px) {
+  .aside { flex: 1 0 0; }
+}
+
+@media all and (min-width: 800px) {
+  .main    { flex: 3 0px; }
+  .aside-1 { order: 1; } 
+  .main    { order: 2; }
+  .aside-2 { order: 3; }
+  .footer  { order: 4; }
+}
+
+body {
+  padding: 2em; 
+}
+</style>
+    <div class="wrapper">
+    <header class="header">
+        <div id="itemStatus"></div>
+    </header>
+    <aside class="aside aside-1">
+        <div id="checkOutForm">
+            <h2>Check Out</h2>
+            <label for="itemKeyCheckOut">Item Key:</label>
+            <input type="text" id="itemKeyCheckOut"><br>
+            <label for="personNameCheckOut">Your Name:</label>
+            <input type="text" id="personNameCheckOut"><br>
+            <label for="quantityCheckOut">Quantity:</label>
+            <input type="number" id="quantityCheckOut"><br>
+            <button onclick="checkOut()">Check Out</button>
+        </div>
+    </aside>
+    <aside class="aside aside-2">
+        <div id="checkInForm">
+            <h2>Check In</h2>
+            <label for="itemKeyCheckIn">Item Key:</label>
+            <input type="text" id="itemKeyCheckIn"><br>
+            <label for="quantityCheckIn">Quantity:</label>
+            <input type="number" id="quantityCheckIn"><br>
+            <button onclick="checkIn()">Check In</button>
+        </div>
+    </aside>
+    <footer class="footer">&copy; Sal 2024</footer>
+  </div>
+  <script src="item_manager.js"></script>
+</style>
+</head>
+<body>
