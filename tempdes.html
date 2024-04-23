@@ -1,91 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="icon" type="image/x-icon" href="./public/SalFavicon.svg">
+</head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Asset Manager</title>
-<style>
-body {
-  background-color: rgb(5, 110, 19);
-}
-.wrapper {
-  display: flex;  
-  flex-flow: row wrap;
-  font-weight: bold;
-  text-align: center; 
-}
 
-.wrapper > * {
-  padding: 10px;
-  flex: 1 100%;
-}
+<body>
+  <script src="item_manager.js" defer></script>
+  <script>
+    const focusOnFirstInput = () => {
+        var inputFields = document.querySelectorAll('input[type="text"]');
+        if (inputFields.length > 0) {
+            inputFields[0].focus();
+        }
+    };
 
-.header {
-  background: rgb(5, 110, 19);
-}
+    const mutationCallback = function(mutationsList, observer) {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                focusOnFirstInput();
+            }
+        }
+    };
 
-.footer {
-  background: rgb(5, 110, 19);
-}
+    const observer = new MutationObserver(mutationCallback);
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.onload = focusOnFirstInput;
+</script>
 
-.main {
-  text-align: left;
-  background: rgb(5, 110, 19);
-}
+<script>
+  function refreshPage() {
+      location.reload(); // Reload the current page
+  }
+</script>
 
-.aside-1 {
-  background: rgb(5, 110, 19);
-}
-
-.aside-2 {
-  background: rgb(5, 110, 19);
-}
-
-@media all and (min-width: 600px) {
-  .aside { flex: 1 0 0; }
-}
-
-@media all and (min-width: 800px) {
-  .main    { flex: 3 0px; }
-  .aside-1 { order: 1; } 
-  .main    { order: 2; }
-  .aside-2 { order: 3; }
-  .footer  { order: 4; }
-}
-
-body {
-  padding: 2em; 
-}
-</style>
     <div class="wrapper">
     <header class="header">
-        <div id="itemStatus"></div>
+        <div id="itemStatus">
+        </div>
     </header>
-    <aside class="aside aside-1">
+
+      <aside class="aside aside-1">
         <div id="checkOutForm">
-            <h2>Check Out</h2>
-            <label for="itemKeyCheckOut">Item Key:</label>
-            <input type="text" id="itemKeyCheckOut"><br>
-            <label for="personNameCheckOut">Your Name:</label>
-            <input type="text" id="personNameCheckOut"><br>
-            <label for="quantityCheckOut">Quantity:</label>
-            <input type="number" id="quantityCheckOut"><br>
-            <button onclick="checkOut()">Check Out</button>
-        </div>
-    </aside>
-    <aside class="aside aside-2">
+          <h2>Asset Search</h2>
+    <input type="text" id="assetTagInput" placeholder="Enter Asset Tag"/>
+    <button onclick="searchAsset" id="searchBtn">Search</button>
+    <button onclick="clearSearch()" id="clearBtn">Clear</button>
+
+    <div id="assetInfo" style="display: none;">
+        <h3>Asset Information</h3>
+        <p><strong>Asset Tag:</strong> <span id="assetTag"></span></p>
+        <p><strong>Asset Name:</strong> <span id="assetName"></span></p>
+        <p><strong>Serial Number:</strong> <span id="serial"></span></p>
+        <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
+        <p><strong>Location:</strong> <span id="location"></span></p>
+        <p><strong>Assigned To:</strong> <span id="assignedTo"></span></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
+
+
+    <script>
+        const searchAsset = () => {
+            const assetTag = document.getElementById('assetTagInput').value;
+            axios.get('http://10.194.20.139:55160/api/getasset', {
+    params: {
+      assetTag: assetTag
+    },
+    headers: {
+        'Authorization': 'TxaSHFRTL7xNx2H82seWMj5fMbMYXkDM',
+        'Content-Type': 'application/json'
+    }
+})
+            .then(res => {
+              const asset = res.data[0]
+
+              if (asset) {
+    $('#assetTag').text(asset.asset_tag);
+    $('#assetName').text(asset.asset_name);
+    $('#serial').text(asset.serial);
+    $('#deviceType').text(asset.device_type);
+    $('#location').text(asset.location);
+    $('#assignedTo').text(asset.assigned_to);
+    $('#assetInfo').css('display', 'block'); // Show the element
+} else {
+    $('#checkOutForm').html(checkin); // Display the checkin form
+}
+                // } else {
+                //   alert('Asset not found');
+                //   $('#checkOutForm').html(checkin)
+                // }
+            
+
+                
+
+            })
+            .catch(e => {
+                console.log(e); // Handle error
+            });
+        };
+
+
+        const checkin = `
         <div id="checkInForm">
-            <h2>Check In</h2>
-            <label for="itemKeyCheckIn">Item Key:</label>
-            <input type="text" id="itemKeyCheckIn"><br>
-            <label for="quantityCheckIn">Quantity:</label>
-            <input type="number" id="quantityCheckIn"><br>
-            <button onclick="checkIn()">Check In</button>
+          <h2>Asset Not Found</h2>
+            <h4>Add Below</h4>
+          <input type="text" id="assetTagInput" placeholder="Asset Tag"><br>
+          <input type="text" id="assetNameInput" placeholder="Asset Name"><br>
+          <input type="text" id="serialInput" placeholder="Serial Number"><br>
+          <input type="text" id="deviceTypeInput" placeholder="Device Type"><br>
+          <input type="text" id="locationInput" placeholder="Location"><br>
+          <input type="text" id="assignedToInput" placeholder="Assigned To"><br>
+          <button onclick="submitForm()">Submit</button>
+          <button onclick="refreshPage()">Back</button>
+          </div>
+          
+          `
+          
+                  $('#searchBtn').on('click', function() {
+                    searchAsset()
+                  }
+                )
+          console.log(checkin);
+    // Function to clear the search field and hide asset information
+const clearSearch = () => {
+    document.getElementById('assetTagInput').value = ''; // Clear the input field
+    $('#assetInfo').css('display', 'none'); // Hide the asset information
+    // Set focus back to the search field
+    document.getElementById('assetTagInput').focus();
+}
+
+
+    // Attach clearSearch function to the clear button click event
+    $('#clearBtn').on('click', function() {
+        clearSearch();
+    });
+    </script>
+    <script>
+// Add an event listener for 'keypress' event on the asset tag input field
+document.getElementById('assetTagInput').addEventListener('keypress', function(event) {
+    // Check if the key pressed is 'Enter' (key code 13)
+    if (event.key === 'Enter') {
+        // Prevent the default behavior of the Enter key (form submission)
+        event.preventDefault();
+        // Trigger the searchAsset function
+        searchAsset();
+    }
+});
+
+    </script>
+
         </div>
-    </aside>
+      </aside>
     <footer class="footer">&copy; Sal 2024</footer>
   </div>
-  <script src="item_manager.js"></script>
-</style>
-</head>
-<body>
+
+  </body>
+  </html>
