@@ -53,7 +53,7 @@ const submitForm = () => {
     .then(response => {
         // Handle POST response
         console.log('worked');
-        window.location.href = "tempdes.html";
+        window.location.href = "index.html";
     })
     .catch(error => {
         console.log(error); // Handle error
