@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  nginx:
+    build: ./
+    image: nginx:1.21.3-alpine
+    container_name: Assets
+    ports:
+      - 8005:80
