@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="./style.css">
   <script src="item_manager.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -122,6 +122,15 @@ const handleBackButton = () => {
     handleClearForm();
     $('#assetForm').css('display', 'none');
     $('#checkOutForm').css('display', 'flex');
+    document.getElementById('searchInput').focus();
+    document.getElementById('searchInput').val('');
 }
 
+$(document).ready(function() {
+    document.getElementById('searchInput').focus();
+})
+
+setInterval(() => {
+  document.getElementById('searchInput').focus();
+}, 500);
 </script>
